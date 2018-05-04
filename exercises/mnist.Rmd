@@ -19,7 +19,7 @@ This exercise is following the mnist example from https://keras.rstudio.com/
 
 ## Prerequisities
 
-Please install the r package keras well in advance.
+Please install the r package keras in advance
 
 ```{r, eval = FALSE}
 install.packages("keras")
@@ -63,7 +63,6 @@ Explore the objects with `str()` or other suitable R commands. What are their di
 # see what we have
 str(X) # images 
 str(y) # labels 
-table(y) # distribution of labels
 ```
 
 
@@ -123,11 +122,7 @@ Use the Keras sequential model to define a neural network model.
 # define the structure of a network
 model <- keras_model_sequential() 
 model %>% 
-  layer_dense(input_shape = c("CHANGE ME!"),
-              units = 64, 
-              activation = 'relu', 
-              kernel_regularizer = regularizer_l2(l = 0.01)
-              ) %>% 
+  layer_dense(input_shape = c("CHANGE ME!"), units = 64, activation = 'relu') %>% 
   layer_dense(units = 10, activation = 'softmax')
 
 ```
@@ -211,7 +206,10 @@ history
 ```
 
 
-# Further exercise
+# Further exercises
+
+TODO
 
 - Try out a more complicated network by adding an extra layer
 - Use dropout regularisation
+

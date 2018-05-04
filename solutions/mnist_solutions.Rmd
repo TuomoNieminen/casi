@@ -104,9 +104,7 @@ Use the Keras sequential model to define a neural network model.
 # define the structure of a network
 model <- keras_model_sequential() 
 model %>% 
-  layer_dense(units = 64, 
-              activation = 'relu', 
-              input_shape = c(784)) %>% 
+  layer_dense(input_shape = c(784), units = 64, activation = 'relu') %>% 
   layer_dense(units = 10, activation = 'softmax')
 
 ```
