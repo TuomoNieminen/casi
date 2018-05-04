@@ -1,0 +1,217 @@
+---
+title: "MNIST with R Keras"
+subtitle: "Computer age statistical inference, University of Helsinki"
+author: "Tuomo Nieminen"
+date: "May 4, 2018"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+## About
+
+This exercise is following the mnist example from https://keras.rstudio.com/
+
+## Prerequisities
+
+Please install the r package keras well in advance.
+
+```{r, eval = FALSE}
+install.packages("keras")
+keras::install_keras()
+```
+
+
+# MNIST Data 
+
+### Load the MNIST data
+
+Load the mnist dataset as `X` and `y` r-objects.
+
+
+```{r}
+library(keras)
+
+mnist <- dataset_mnist()
+X <- mnist$train$x
+y <- mnist$train$y
+```
+
+
+*NOTE: If you encounter an 'unkown url type' error, open command line and do:*
+
+```
+source ~/anaconda3/envs/r-tensorflow/bin/activate
+python
+from keras.datasets import mnist
+mnist.load_data()
+```
+
+Then repeat the above R commands.
+
+
+### Explore the data
+
+Explore the objects with `str()` or other suitable R commands. What are their dimensionalities? 
+
+```{r}
+# see what we have
+str(X) # images 
+str(y) # labels 
+table(y) # distribution of labels
+```
+
+
+Plot some of the images. Is there anything strange about the images from a human perspective? How about from a computer/algorithmic perspective?
+
+```{r}
+# plot some of the images
+which <- "CHANGE ME!"
+image(X[which, , ], col = grey(seq(1,0, length = 256)))
+```
+
+
+### Reshaping
+
+Reshape both the X and the y arrays by collapsing X into a matrix and by expanding y to a hot-one encoded matrix.
+
+```{r}
+# reshape the n, 28, 28 array to a n, 28*28 matrix
+X_ <- array_reshape(X, c(nrow(X), 784))
+
+# rescale to 0...1
+X_ <- X_ / 255
+
+# hot-one encode y
+y_ <- to_categorical(y)
+```
+
+Now look at the first couple observations in `y_`. What is the format of the labels? What is hot-one encoding?
+
+```{r}
+"CHANGE ME!"(y_)
+```
+
+
+### Train and test split
+
+Split the data into train and test sets
+
+```{r}
+n <- nrow(X)
+train_indices <- sample(1:n, n*0.8)
+
+x_train <- X_[train_indices , ]
+y_train <- y_[train_indices, ]
+
+x_test <- X_[-train_indices , ]
+y_test <- y_[-train_indices, ]
+```
+
+# Neural Network Model for Classification
+
+### Define the structure for a neural network
+
+Use the Keras sequential model to define a neural network model. 
+
+```{r}
+# define the structure of a network
+model <- keras_model_sequential() 
+model %>% 
+  layer_dense(input_shape = c("CHANGE ME!"),
+              units = 64, 
+              activation = 'relu', 
+              kernel_regularizer = regularizer_l2(l = 0.01)
+              ) %>% 
+  layer_dense(units = 10, activation = 'softmax')
+
+```
+
+*hint* 
+Complete the network definition by defining the input shape of the first dense layer. This should be the shape of the input data, ignoring the sample size dimension. e.g. if our data has 3 features, this should be a length one integer vecor with the value 3.
+
+### Compile the model
+
+```{r}
+# define the loss and optimizer algorithm
+model %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_sgd(),
+  metrics = c('accuracy')
+)
+```
+
+### Train the model
+
+Train the model on 20 epochs by inputting data in batches of 480 observations.
+
+```{r}
+history <- model %>% fit(
+  x_train, y_train, 
+  epochs = "CHANGE ME!", 
+  batch_size = "CHANGE ME!", 
+  validation_data = list(x_test, y_test)
+)
+```
+
+
+# Model Performance
+
+### Training history
+
+```{r}
+history
+```
+
+```{r}
+plot(history)
+```
+
+
+### Predicting
+
+Use the model to predict labels on the test data. 
+
+```{r}
+predicted_proba <- model %>% predict(x_test)
+```
+
+The predictions are given as a vector of probabilities for each label ("soft" predictions). A simple way to evaluate model performance is by converting to "hard" predictions and then comparing to the actual labels. Convert both the probability predictions and the hot-one encoded test labels to vectors of label indeces.
+
+```{r}
+predicted_label <- max.col(predicted_proba)
+true_label <- max.col(y_test)
+```
+
+### Confusion matrix
+
+A confusion matrix is a cross-tabulation of the true labels and the predicted labels. Compute that matrix.
+
+```{r}
+confusion <- "CHANGE ME!"
+confusion
+```
+
+*hint*: `table()`
+
+### Accuracy
+
+Accuracy is the proportion of correctly classified labels. Use the confusion martix to compute the accuracy. Compare it to the accurace reported in the history object.
+
+```{r}
+# accuracy
+acc <- sum(diag(confusion)) / sum(confusion)
+acc
+history
+```
+
+
+# Further exercise
+
+- Try out a more complicated network by adding an extra layer
+- Use dropout regularisation
