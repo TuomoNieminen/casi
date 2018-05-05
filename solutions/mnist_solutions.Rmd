@@ -10,7 +10,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
 
@@ -48,10 +48,10 @@ table(y) # distribution of labels
 
 Plot some of the images. Is there anything strange about the images from a human perspective? How about from a computer/algorithmic perspective?
 
-```{r}
+```{r, fig.cap = "16 randomly sampled digits from the MNIST dataset"}
 # plot some of the images
 par(mfrow = c(4,4), mar = c(0,0,0,0), xaxt = "n", yaxt = "n")
-indices <- sample(1:nrow(X_), 16)
+indices <- sample(1:nrow(X), 16)
 for(i in indices)
   image(X[i, , ], col = grey(seq(1,0, length = 256)))
 ```
@@ -84,7 +84,7 @@ head(y_)
 Split the data into train and test sets
 
 ```{r}
-n <- nrow(X)
+n <- nrow(X_)
 train_indices <- sample(1:n, n*0.8)
 
 x_train <- X_[train_indices , ]
