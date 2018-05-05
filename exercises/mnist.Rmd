@@ -15,16 +15,20 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 
 ## About
 
-This exercise is following the mnist example from https://keras.rstudio.com/
+This exercise follows the MNIST example given in https://keras.rstudio.com/ with slight modifications. You will learn how to build a simple neural network which learns to classify handwritten digits.
 
-## Prerequisities
+**Prerequisities**
 
-Please install the r package keras in advance
+Please install the r package keras in advance:  
 
 ```{r, eval = FALSE}
 install.packages("keras")
 keras::install_keras()
 ```
+
+**Instructions**  
+
+This is a tutorial-like exercise where most of the R code needed is given and usable as-is. However, parts in the code marked with "CHANGE ME!" are meant to be changed. Fire up your favourite R editor (RStudio is highly recommended) and follow along!
 
 
 # MNIST Data 
@@ -57,19 +61,27 @@ Then repeat the above R commands.
 
 ### Explore the data
 
-Explore the objects with `str()` or other suitable R commands. What are their dimensionalities? 
+Explore the objects with `str()` and/or other suitable R commands. What are their dimensionalities? 
 
 ```{r}
 str(X) # images 
 str(y) # labels 
 ```
 
-
-Plot some of the images. Is there anything strange about the images from a human perspective? How about from a computer/algorithmic perspective?
+Plot an image in grey scale using the `image()` function.
 
 ```{r}
-which <- "CHANGE ME!"
+which <- 20
 image(X[which, , ], col = grey(seq(1,0, length = 256)))
+```
+
+Plot a random sample of 16 images in grey scale using the `image()` function. Is there something problematic about the images from a human perspective? How about from a computer/algorithmic perspective?
+
+```{r}
+indices <- sample(1:nrow(X), 16)
+par(mfrow = c(4, 4), mar = c(0,0,0,0), yaxt = "n", xaxt = "n")
+for(i in indices)
+  "CHANGE ME!" # plot i:th image
 ```
 
 
@@ -120,7 +132,7 @@ model %>%
 ```
 
 *hint* 
-Complete the network definition by defining the input shape of the first dense layer. This should be the shape of the input data, ignoring the sample size dimension. e.g. if our data has 3 features, this should be a length one integer vecor with the value 3.
+Complete the network definition by defining the input shape of the first dense layer. This should correspond to the shape of the input data, ignoring the sample size dimension. e.g. if our data has 3 features, this should be a length one integer vecor with the value 3.
 
 ### Compile the model
 
@@ -169,7 +181,9 @@ Use the model to predict labels on the test data.
 predicted_proba <- model %>% predict(x_test)
 ```
 
-The predictions are given as a vector of probabilities for each label ("soft" predictions). A simple way to evaluate model performance is by converting to "hard" predictions and then comparing to the actual labels. Convert both the probability predictions and the hot-one encoded test labels to vectors of label indeces.
+The predictions are given as a vector of probabilities for each label ("soft" predictions). A simple way to evaluate model performance is by converting to "hard" predictions and then comparing the predictions to the actual labels.  
+
+Convert both the probability predictions and the hot-one encoded test labels to vectors of label indeces.
 
 ```{r}
 predicted_label <- max.col(predicted_proba)
