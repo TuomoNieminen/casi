@@ -4,7 +4,8 @@ subtitle: "Computer age statistical inference, University of Helsinki"
 author: "Tuomo Nieminen"
 date: "May 4, 2018"
 output: 
-  html_document:
+  github_document:
+    html_preview: false
     toc: true
     toc_depth: 2
 ---
