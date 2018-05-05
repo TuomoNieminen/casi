@@ -49,7 +49,6 @@ table(y) # distribution of labels
 Plot some of the images. Is there anything strange about the images from a human perspective? How about from a computer/algorithmic perspective?
 
 ```{r, fig.cap = "16 randomly sampled digits from the MNIST dataset"}
-# plot some of the images
 par(mfrow = c(4,4), mar = c(0,0,0,0), xaxt = "n", yaxt = "n")
 indices <- sample(1:nrow(X), 16)
 for(i in indices)
@@ -62,14 +61,9 @@ for(i in indices)
 Reshape both the X and the y arrays by collapsing X into a matrix and by expanding y to a hot-one encoded matrix.
 
 ```{r}
-# reshape the n, 28, 28 array to a n, 28*28 matrix
-X_ <- array_reshape(X, c(nrow(X), 784))
-
-# rescale to 0...1
-X_ <- X_ / 255
-
-# hot-one encode y
-y_ <- to_categorical(y)
+X_ <- array_reshape(X, c(nrow(X), 784)) # reshape X to (n, 784) matrix
+X_ <- X_ / 255 # rescale to 0...1
+y_ <- to_categorical(y) # hot-one encode y
 ```
 
 Now look at the first couple observations in `y_`. What is the format of the labels? What is hot-one encoding?
@@ -101,12 +95,10 @@ y_test <- y_[-train_indices, ]
 Use the Keras sequential model to define a neural network model. 
 
 ```{r}
-# define the structure of a network
 model <- keras_model_sequential() 
 model %>% 
   layer_dense(input_shape = c(784), units = 64, activation = 'relu') %>% 
   layer_dense(units = 10, activation = 'softmax')
-
 ```
 
 *hint* 
@@ -114,8 +106,9 @@ Complete the network definition by defining the input shape of the first dense l
 
 ### Compile the model
 
+Define the loss function and the optimizer algorithm
+
 ```{r}
-# define the loss and optimizer algorithm
 model %>% compile(
   loss = 'categorical_crossentropy',
   optimizer = optimizer_sgd(),
@@ -183,7 +176,6 @@ confusion
 Accuracy is the proportion of correctly classified labels. Use the confusion martix to compute the accuracy. Compare it to the accurace reported in the history object.
 
 ```{r}
-# accuracy
 acc <- sum(diag(confusion)) / sum(confusion)
 cat("Accuracy: ", acc, "\n\n")
 history
