@@ -4,7 +4,7 @@ subtitle: "Computer age statistical inference, University of Helsinki"
 author: "Tuomo Nieminen"
 date: "May 4, 2018"
 output: 
-  html_document:
+  github_document:
     toc: true
     toc_depth: 2
 ---
@@ -35,14 +35,14 @@ y <- mnist$train$y
 Explore the objects with `str()` or other suitable R commands. What are their dimensionalities? 
 
 ```{r}
-cat("Images: ")
 str(X) # images (n, 28, 28)
-
-cat("\nLabels: ")
 str(y) # labels (n)
+```
 
-cat("\nDistribution of labels: \n")
-table(y) # distribution of labels
+Distribution of labels
+
+```{r}
+table(y)
 ```
 
 
@@ -69,7 +69,8 @@ y_ <- to_categorical(y) # hot-one encode y
 Now look at the first couple observations in `y_`. What is the format of the labels? What is hot-one encoding?
 
 ```{r}
-head(y_)
+colnames(y_) <- 0:9
+head(y_) %>% knitr::kable()
 ```
 
 
@@ -101,12 +102,9 @@ model %>%
   layer_dense(units = 10, activation = 'softmax')
 ```
 
-*hint* 
-Complete the network definition by defining the input shape of the first dense layer. This should be the shape of the input data, ignoring the sample size dimension. e.g. if our data has 3 features, this should be a length one integer vecor with the value 3.
-
 ### Compile the model
 
-Define the loss function and the optimizer algorithm
+Define the loss function and the optimizer algorithm.
 
 ```{r}
 model %>% compile(
@@ -169,15 +167,13 @@ confusion <- table(true_label, predicted_label)
 confusion
 ```
 
-*hint*: `table()`
-
 ### Accuracy
 
 Accuracy is the proportion of correctly classified labels. Use the confusion martix to compute the accuracy. Compare it to the accurace reported in the history object.
 
 ```{r}
 acc <- sum(diag(confusion)) / sum(confusion)
-cat("Accuracy: ", acc, "\n\n")
+acc
 history
 ```
 
