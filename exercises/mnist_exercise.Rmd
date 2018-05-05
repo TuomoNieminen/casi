@@ -125,8 +125,8 @@ model %>%
 
 ```
 
-*hint* 
-Complete the network definition by defining the input shape of the first dense layer. This should correspond to the shape of the input data, ignoring the sample size dimension. e.g. if our data has 3 features, this should be a length one integer vecor with the value 3.
+*hint*:  
+The input shape should correspond to the shape of the input data, ignoring the sample size dimension. e.g. if our data is a matrix with 3 features, this should be a length one integer vecor with the value 3.
 
 ### Compile the model
 
