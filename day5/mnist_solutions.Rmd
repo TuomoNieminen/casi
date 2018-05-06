@@ -7,7 +7,7 @@ output:
   github_document:
     html_preview: false
     toc: true
-    toc_depth: 2
+    toc_depth: 1
 ---
 
 ```{r setup, include=FALSE}
@@ -149,19 +149,28 @@ Use the model to predict labels on the test data.
 
 ```{r}
 predicted_proba <- model %>% predict(x_test)
-head(predicted_proba)
+colnames(predicted_proba) <- 0:9
 ```
 
-Convert both the probability predictions and the hot-one encoded test labels to vectors of label indeces.
+Append the true labels
+
+```{r}
+predictions_labels <- cbind(round(predicted_proba, 2), label = y[-train_indices])
+predictions_labels %>% head() %>% knitr::kable()
+```
+
+### Confusion matrix
+
+A confusion matrix is a cross-tabulation of the true labels and the predicted labels. 
+
+To build it, first convert both the probability predictions and the hot-one encoded test labels to vectors of label indeces.
 
 ```{r}
 predicted_label <- max.col(predicted_proba)
 true_label <- max.col(y_test)
 ```
 
-### Confusion matrix
-
-A confusion matrix is a cross-tabulation of the true labels and the predicted labels. 
+Cross-tabulate predicted labels and true labels.
 
 ```{r}
 confusion <- table(true_label, predicted_label)
