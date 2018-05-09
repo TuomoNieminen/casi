@@ -64,8 +64,11 @@ Reshape both the X and the y arrays by collapsing X into a matrix and by expandi
 ```{r}
 N <- dim(X)[1]
 NC <- dim(X)[2] * dim(X)[3]
+
 X_ <- array_reshape(X, c(N, NC)) # reshape X to (N, 784) matrix
+
 X_ <- X_ / 255 # rescale to 0...1
+
 y_ <- to_categorical(y) # hot-one encode y
 ```
 
