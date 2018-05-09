@@ -28,7 +28,7 @@ install.packages("keras")
 
 **Step 2**: Install all dependecies for keras.
 
-Keras provides a high-level interface to Google's deep learning library Tensorflow. Keras is originally a Python package and the R version of Keras depends on both Python Keras and Tensorflow. The function `install_keras()` in the R Keras package handles these dependencies. The function will alert you of dependencies you need to install manually (on windows you will need Anaconda 3.x). For more information see the help page ([link](https://keras.rstudio.com/reference/install_keras.html)). Note that you can safely ignore the GPU installation part. 
+Keras provides a high-level interface to Google's deep learning library Tensorflow. Keras is originally a Python package and the R version of Keras depends on both Python Keras and Tensorflow. The function `install_keras()` in the R Keras package handles these dependencies. The function will alert you of dependencies you need to install manually (on windows you will need Anaconda 3.x). For more information see the help page ([link](https://keras.rstudio.com/reference/install_keras.html), note that you can safely ignore the GPU installation part). 
 
 ```{r, eval = FALSE}
 keras::install_keras()
