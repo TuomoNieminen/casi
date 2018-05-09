@@ -16,18 +16,25 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 
 ## About
 
-This exercise follows the MNIST example given in https://keras.rstudio.com/ with slight modifications. You will learn how to build a simple neural network which learns to classify handwritten digits.
+In this exercise you will learn how to use the r package *Keras* to build and train a neural network model which learns to classify images of handwritten digits. The model is trained using Google's deep learning library *Tensorflow* for which Keras provides a high-level interface. This exercise is based on the example given in https://keras.rstudio.com/.
 
-**Prerequisities**
+## Prerequisities
 
-Please install the r package keras in advance:  
+**Step 1**: install the r package *keras*.
 
 ```{r, eval = FALSE}
 install.packages("keras")
+```
+
+**Step 2**: Install all dependecies for keras.
+
+Keras provides a high-level interface to Google's deep learning library Tensorflow. Keras is originally a Python package and the R version of Keras depends on both Python Keras and Tensorflow. The function `install_keras()` in the R Keras package handles these dependencies. The function will alert you of dependencies you need to install manually (on windows you will need Anaconda 3.x). For more information see the help page ([link](https://keras.rstudio.com/reference/install_keras.html)). Note that you can safely ignore the GPU installation part. 
+
+```{r, eval = FALSE}
 keras::install_keras()
 ```
 
-**Instructions**  
+## Instructions
 
 This is a tutorial-like exercise where most of the R code needed is given and usable as-is. However, parts in the code marked with "CHANGE ME!" are meant to be changed. Fire up your favourite R editor (RStudio is highly recommended) and follow along!
 
@@ -48,16 +55,14 @@ y <- mnist$train$y
 ```
 
 
-*NOTE: If you encounter an 'unkown url type' error, open command line and do:*
-
+*NOTE: If you encounter an 'unkown url type' error, open command line and do:*  
 ```
 source ~/anaconda3/envs/r-tensorflow/bin/activate
 python
 from keras.datasets import mnist
 mnist.load_data()
-```
-
-Then repeat the above R commands.
+```  
+*Then repeat the above R commands.*
 
 
 ### Explore the data
@@ -68,6 +73,12 @@ Explore the objects with `str()` and/or other suitable R commands. What are thei
 str(X) # images 
 str(y) # labels 
 ```
+
+```{r}
+dim(X)
+dim(y)
+```
+
 
 Plot a random sample of 16 images in grey scale using the `image()` function. Is there something problematic about the images from a human perspective? How about from a computer/algorithmic perspective?
 
@@ -84,7 +95,9 @@ for(i in sample(1:nrow(X), 16))
 Reshape both the X and the y arrays by collapsing X into a matrix and by expanding y to a hot-one encoded matrix.
 
 ```{r}
-X_ <- array_reshape(X, c(nrow(X), 784)) # reshape X to (n, 784) matrix
+N <- dim(X)[1]
+NC <- dim(X)[2] * dim(X)[3]
+X_ <- array_reshape(X, c(N, NC)) # reshape X to (N, 784) matrix
 X_ <- X_ / 255 # rescale to 0...1
 y_ <- to_categorical(y) # hot-one encode y
 ```
@@ -98,11 +111,10 @@ Now look at the first couple observations in `y_`. What is the format of the lab
 
 ### Train and test split
 
-Split the data into train and test sets
+Split the data into train and test sets (80 - 20 split).  
 
 ```{r}
-n <- nrow(X)
-train_indices <- sample(1:n, n*0.8)
+train_indices <- sample(1:N, N*0.8)
 
 x_train <- X_[train_indices , ]
 y_train <- y_[train_indices, ]
@@ -130,7 +142,7 @@ The input shape should correspond to the shape of the input data, ignoring the s
 
 ### Compile the model
 
-Define the loss function and the optimizer algorithm
+Define the loss function and the optimizer algorithm.
 
 ```{r}
 model %>% compile(
@@ -142,7 +154,7 @@ model %>% compile(
 
 ### Train the model
 
-Train the model on 20 epochs by inputting data in batches of 480 observations.
+Train the model by inputting data in batches of 480 observations, passing through the complete dataset 20 times.
 
 ```{r}
 history <- model %>% fit(
@@ -161,6 +173,8 @@ history <- model %>% fit(
 ```{r}
 history
 ```
+
+Plot the accuracy and loss for each pass of the complete dataset, for both train and test data.
 
 ```{r}
 plot(history)

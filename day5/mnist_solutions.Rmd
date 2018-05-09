@@ -7,7 +7,7 @@ output:
   github_document:
     html_preview: false
     toc: true
-    toc_depth: 1
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
@@ -62,7 +62,9 @@ for(i in sample(1:nrow(X), 16))
 Reshape both the X and the y arrays by collapsing X into a matrix and by expanding y to a hot-one encoded matrix.
 
 ```{r}
-X_ <- array_reshape(X, c(nrow(X), 784)) # reshape X to (n, 784) matrix
+N <- dim(X)[1]
+NC <- dim(X)[2] * dim(X)[3]
+X_ <- array_reshape(X, c(N, NC)) # reshape X to (N, 784) matrix
 X_ <- X_ / 255 # rescale to 0...1
 y_ <- to_categorical(y) # hot-one encode y
 ```
@@ -80,8 +82,7 @@ head(y_) %>% knitr::kable()
 Split the data into train and test sets
 
 ```{r}
-n <- nrow(X_)
-train_indices <- sample(1:n, n*0.8)
+train_indices <- sample(1:N, N*0.8)
 
 x_train <- X_[train_indices , ]
 y_train <- y_[train_indices, ]
@@ -99,7 +100,7 @@ Use the Keras sequential model to define a neural network model. The input shape
 ```{r}
 model <- keras_model_sequential() 
 model %>% 
-  layer_dense(input_shape = c(784), units = 64, activation = 'relu') %>% 
+  layer_dense(input_shape = dim(x_train)[-1], units = 64, activation = 'relu') %>% 
   layer_dense(units = 10, activation = 'softmax')
 ```
 
@@ -137,6 +138,8 @@ history <- model %>% fit(
 ```{r}
 history
 ```
+
+Plot the accuracy and loss for each pass of the complete dataset, for both train and test data.
 
 ```{r}
 plot(history)
@@ -186,5 +189,4 @@ acc <- sum(diag(confusion)) / sum(confusion)
 acc
 history
 ```
-
 
