@@ -11,9 +11,17 @@
 ### Part 2: Training a network
 
 - Generalisation: train and test data
-- Loss function (L)
-- Backpropagation to find the gradient of L
+- Loss and cost functions (L, C) (https://stats.stackexchange.com/questions/179026/objective-function-cost-function-loss-function-are-they-the-same-thing)
 - Gradient Descent to optimize L (stochastic GD)
+
+Video: https://www.youtube.com/watch?v=IHZwWFHWa-w
+(0:30 - 10:30; 1.25x speed)
+
+- Backpropagation to find the gradient of L
+
+Video: https://www.youtube.com/watch?v=tIeHLnjs5U8
+(complete, normal speed)
+
 - Batches and epochs
 - Play with R Keras (mnist exercise)
 
