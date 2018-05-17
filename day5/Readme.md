@@ -3,7 +3,7 @@
 ### Part 1: What is a neural network?
 
 - Motivation: practical example (image classification)
-- Machine learning: find f for which y = f(X). Example: linear model.
+- Machine learning: find f for which f(X) = y. Example: linear model.
 - Structure of a neural network (layers, nodes, activation functions)
 - Demo: http://playground.tensorflow.org
 - Let students play with demo
@@ -28,6 +28,7 @@ Video: https://www.youtube.com/watch?v=tIeHLnjs5U8
 ### Part 3: Different networks
 
 - Convolutional neural networks (CNN)
+https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/
 - Recurrent neural networks (RNN)
 - Possible home exercise: update mnist model to a CNN
 
