@@ -14,15 +14,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-The goal of machine learning is to find a function $f$ to characterize a predictive relationship between the data $X$ and some target $y$, i.e. to find an $f$ for which
+The goal of machine learning is to find a function $f$ to characterize a predictive relationship between the data $x$ and some target $y$, i.e. to find an $f$ for which
 
-$$f(X) = y.$$
+$$f(x) = y.$$
 
 A simple example is linear regression, where
 
-$$f(X) = w_0 + \sum_{j = 1, .., p} x_jw_j.$$
+$$f(x) = w_0 + \sum_{j = 1, .., p} x_jw_j.$$
 
-A neural network is a highly parametrized model which in theory can learn any smooth predictive relationship $f: X \rightarrow y$.
+A neural network is a highly parametrized model which in theory can learn any smooth predictive relationship $f: x \rightarrow y$.
 
 # Structure of a neural network
 
@@ -61,7 +61,7 @@ where $W$ represents the matrix of weights from layer $L_{k-1}$ to layer $L_k$, 
 Typical choices for the nonlinear part of the activation functions are 
 
 - Rectified linear unit (ReLU): $g(x) = max(0, x)$
-- Sigmoid: $g(x) =  \frac{e^x}{1 + e^x}$
+- Sigmoid: $g(x) =  1 / (1 + e^{-x})$
 
 Without the nonlinearities, the neural network reduces to a generalized linear model.
 
@@ -76,7 +76,7 @@ It is generally more useful to learn the probability function
 
 $$P(y = j | x), \quad j = 0, 1, .. 9 $$
 
-We will define a neural network which produces probabilities for each of the labels. In this example the output layer of the network has 10 nodes, one for each of the possible class labels. The final nonlinear transformation $g^{(K)}$ in the **output layer** is the *softmax function*  
+We will define a neural network which produces probabilities for each of the labels. In this example the output layer of the network has 10 units, one for each of the possible class labels. The final nonlinear transformation $g^{(K)}$ in the **output layer** is the *softmax function*  
 
 $$
 g^{(K)}(z_m^{(K)}; z^{(K)}) = \frac{exp(z_m^{(K)})}{\sum_{l = 1,..,M} exp(z_l^{(K)})},
@@ -93,15 +93,14 @@ A machine learning algorithm is usually trained by first splitting the data into
 
 ## Loss function
 
-A neural network model is a hierarchical function $f(x; W)$ of the feature vector $x$, and the collection of weights $W$. A loss function is a function defined on a single data point $x_i$, a prediction $\hat{y}_i = f(x_i | W)$ and target $y_i$, and measures the penalty caused by an error in the prediction. For example the square loss is given by 
+A neural network model is a hierarchical function $f(x; W)$ of the feature vector $x$, and the collection of weights $W$. A loss function is a function defined on a single data point $x_i$, a prediction $\hat{y}_i = f(x_i ; W)$ and target $y_i$, and measures the penalty caused by an error in the prediction. For example the square loss is given by 
 
-$$L(f(x_i | W), y_i) = (f(x_i | W) - y_i)^2 = (\hat{y}_i - y_i)^2.$$ 
-
+$$L(f(x_i ; W), y_i) = (f(x_i ; W) - y_i)^2 = (\hat{y}_i - y_i)^2.$$ 
 
 The *categorical cross-entropy* is often used as the loss function for classification problems. It is equivalent to the multinomial log likelihood. For a 10-class model it is given by
 
 $$
-L(f(x_i | W), y_i) = \sum_{j = 0, .., 9}y_{ij} \cdot log (\hat{p_{ij}}).
+L(f(x_i ; W), y_i) = \sum_{j = 0, .., 9}y_{ij} \cdot log (\hat{p}_{ij}).
 $$
 
 The negative log likelihood and categorical cross-entropy can be said to be two different interpretations of the same formula.
@@ -115,7 +114,7 @@ refs:
 A cost function defines the optimization problem to determine the optimal set of parameters in the model. A typical choice is the average loss over the training set plus some model complexity penalty (regularization):
 
 $$
-C(W) = \frac{1}{n} \sum_{i = 1, .., n} L(f(x_i | W), y_i) + \lambda J(W),
+C(W) = \frac{1}{n} \sum_{i = 1, .., n} L(f(x_i ; W), y_i) + \lambda J(W),
 $$
 
 where $\lambda$ is a tuning parameter for the penalty function $J(W)$. For example, using the square loss and no penalty ($\lambda = 0$), the cost becomes
@@ -139,12 +138,12 @@ where $\alpha$ is the learning rate. Gradient descent requires (nonzero, typical
 
 ## Backpropagation to find the gradient of the cost function
 
-Since $f(x | W)$ is defined hierarchically, the elements of $W$ occur in layers, starting from the input layer. Computing the gradient is also done most naturally in layers. The backpropagation algorithm implements the chain rule for differentiation to find the gradient of the objective function.
+Since $f(x ; W)$ is defined hierarchically, the elements of $W$ occur in layers, starting from the input layer. Computing the gradient is also done most naturally in layers. The backpropagation algorithm implements the chain rule for differentiation to find the gradient of the objective function.
 
-The goal is to compute the derivative of $L(f(x | W), y)$ with respect to any of the elements of $W$, for a generic input–output pair $(x, y)$. Since the objective function is a sum of loss functions, the overall gradient will be the sum of these individual gradient elements over the training pairs $(x_i, y_i)$
+The goal is to compute the derivative of $L(f(x ; W), y)$ with respect to any of the elements of $W$, for a generic input–output pair $(x, y)$. Since the objective function is a sum of loss functions, the overall gradient will be the sum of these individual gradient elements over the training pairs $(x_i, y_i)$
 
 $$
-\Delta C(W) = \sum_{i = 1, .., n} \Delta L(f(x_i | W), y_i) + \Delta \lambda J(W)
+\Delta C(W) = \sum_{i = 1, .., n} \Delta L(f(x_i ; W), y_i) + \Delta \lambda J(W)
 $$
 
 
@@ -164,3 +163,5 @@ Convolutional neural networks
 https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/
 
 Recurrent neural networks
+
+Autoencoders
