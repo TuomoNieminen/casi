@@ -101,7 +101,7 @@ $$L(f(x_i | W), y_i) = (f(x_i | W) - y_i)^2 = (\hat{y}_i - y_i)^2.$$
 The *categorical cross-entropy* is often used as the loss function for classification problems. It is equivalent to the multinomial log likelihood. For a 10-class model it is given by
 
 $$
-L(f(x_i | W), y_i) = \sum_{j = 0, .., 9}y_j \cdot log (\hat{p_j}).
+L(f(x_i | W), y_i) = \sum_{j = 0, .., 9}y_{ij} \cdot log (\hat{p_{ij}}).
 $$
 
 The negative log likelihood and categorical cross-entropy can be said to be two different interpretations of the same formula.
