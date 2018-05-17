@@ -2,16 +2,17 @@
 title: "CASI day 5 lecture notes: Neural networks"
 author: "Tuomo Nieminen"
 date: "May 16, 2018"
-output: pdf_document
+output: 
+  pdf_document:
+    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Neural networks
 
-## Introduction
+# Introduction
 
 The goal of machine learning is to find a function $f$ to characterize a predictive relationship between the data $X$ and some target $y$, i.e. to find an $f$ for which
 
@@ -21,11 +22,11 @@ A simple example is linear regression, where
 
 $$f(X) = w_0 + \sum_{j = 1, .., p} x_jw_j.$$
 
-## Neural networks
-
 A neural network is a highly parametrized model which in theory can learn any smooth predictive relationship $f: X \rightarrow y$.
 
-### Layers
+# Structure of a neural network
+
+## Layers
 
 A neural network consists of $K$ layers ($L_k$), which can be categorized to
 
@@ -35,7 +36,7 @@ A neural network consists of $K$ layers ($L_k$), which can be categorized to
 
 *See fig. 18.1. in Computer age statistical inference*
 
-### Units and activations
+## Units and activations
 
 The layers of a neural network consist of *units*, which have *activation functions*. The outputs of the activation functions are fed to the next layer. The unit $l$ in layer $k$ takes as input the outputs from the previous layer, combines them via a linear function, and then applies a nonlinear transformation $g_l$ to produce outputs $a_l^{(k)}$.
 
@@ -45,7 +46,7 @@ $$z_l^{(2)} = w_{l0}^{(1)} + \sum_{j=1, .., p} w_{lj}^{(1)}x_j$$
 
 $$a_l^{(2)} = g_l^{(2)}(z_l^{(2)}).$$
 
-### Transitions between layers
+## Transitions between layers
 
 In general, the transition $L_{k-1} \rightarrow L_k$ is given by
 
@@ -54,9 +55,8 @@ $$a^{(k)} = g^{(k)}(z^{(k)})$$
 
 where $W$ represents the matrix of weights from layer $L_{k-1}$ to layer $L_k$,  $a^{(k)}$ is the entire vector of activations at layer $L_k$, and $g^{(k)}$ operates elementwise.
 
-*ref: Computer age statistical inference, pages 351 - 356.*
 
-### Activation functions
+## Activation functions
 
 Typical choices for the nonlinear part of the activation functions are 
 
@@ -66,7 +66,7 @@ Typical choices for the nonlinear part of the activation functions are
 Without the nonlinearities, the neural network reduces to a generalized linear model.
 
 
-## A neural network for classification
+## Example: A neural network for classification
 
 Say we want to predict one of 10 classes, using the data $x$ as input, i.e. we want
 
@@ -76,11 +76,7 @@ It is generally more useful to learn the probability function
 
 $$P(y = j | x), \quad j = 0, 1, .. 9 $$
 
-We will define a neural network which produces probabilities for each of the labels.
-
-### Output layer
-
-In this example the output layer of the network has 10 nodes, one for each of the possible class labels. The final nonlinear transformation $g^{(K)}$ is the *softmax function*  
+We will define a neural network which produces probabilities for each of the labels. In this example the output layer of the network has 10 nodes, one for each of the possible class labels. The final nonlinear transformation $g^{(K)}$ in the **output layer** is the *softmax function*  
 
 $$
 g^{(K)}(z_m^{(K)}; z^{(K)}) = \frac{exp(z_m^{(K)})}{\sum_{l = 1,..,M} exp(z_l^{(K)})},
@@ -88,22 +84,33 @@ $$
 
 which computes a number (probability) between zero and one, and all M of them sum to one. This is a symmetric version of the inverse link function used for multiclass logistic regression: a generalization of the sigmoid. 
 
-*ref: Computer age statistical inference, page 355*
 
+# Fitting a neural network
 
-## Fitting a neural network
-
-### Train and test data
+## Train and test data
 
 A machine learning algorithm is usually trained by first splitting the data into train and test sets. The training data is used to fit the model and the test data is used to evaluate the model performance. 
 
-### Loss function
+## Loss function
 
 A neural network model is a hierarchical function $f(x; W)$ of the feature vector $x$, and the collection of weights $W$. A loss function is a function defined on a single data point $x_i$, a prediction $\hat{y}_i = f(x_i | W)$ and target $y_i$, and measures the penalty caused by an error in the prediction. For example the square loss is given by 
 
-$$L(f(x_i | W), y_i) = (f(x_i | W) - y_i)^2 = (\hat{y}_i - y_i)^2$$. 
+$$L(f(x_i | W), y_i) = (f(x_i | W) - y_i)^2 = (\hat{y}_i - y_i)^2.$$ 
 
-### Cost function
+
+The *categorical cross-entropy* is often used as the loss function for classification problems. It is equivalent to the multinomial log likelihood. For a 10-class model it is given by
+
+$$
+L(f(x_i | W), y_i) = \sum_{j = 0, .., 9}y_{ij} \cdot log (\hat{p_{ij}}).
+$$
+
+The negative log likelihood and categorical cross-entropy can be said to be two different interpretations of the same formula.
+
+refs: 
+[wikipedia](https://en.wikipedia.org/wiki/Cross_entropy#Cross-entropy_error_function_and_logistic_regression),
+[stackechange](https://stats.stackexchange.com/questions/198038/cross-entropy-or-log-likelihood-in-output-layer)
+
+## Cost function
 
 A cost function defines the optimization problem to determine the optimal set of parameters in the model. A typical choice is the average loss over the training set plus some model complexity penalty (regularization):
 
@@ -111,21 +118,17 @@ $$
 C(W) = \frac{1}{n} \sum_{i = 1, .., n} L(f(x_i | W), y_i) + \lambda J(W),
 $$
 
-where $\lambda$ is a tunign parameter for the penalty function $J(W)$. For example, using the square loss and no penalty ($\lambda = 0$), the cost becomes
+where $\lambda$ is a tuning parameter for the penalty function $J(W)$. For example, using the square loss and no penalty ($\lambda = 0$), the cost becomes
 
 $$
 \frac{1}{n} \sum_{i = 1, .., n} (\hat{y}_i - y_i)^2,
 $$
-also known as Ordinary least squares (OLS). 
-
-### Objective function
-
-A cost function can be derived via maximum likelihood estimation (possibly adding a penalty term). An MLE is a type of objective function, a general expression for the function to optimize.
+also known as Ordinary Least Squares (OLS). A cost function can be derived via maximum likelihood estimation (possibly adding a penalty term). An MLE is an example of an *objective function*, a general expression for the function to optimize (maximize or minimize).
 
 ref: [stats.stackexchange.com](https://stats.stackexchange.com/questions/179026/objective-function-cost-function-loss-function-are-they-the-same-thing)
 
 
-### Gradient Descent
+## Gradient Descent
 
 To fit the model, the objective is to minimize the cost function with respect to $W$. There is no analytical solution, so we resort to numerical methods. Given the gradient $\Delta C(W)$ of the cost function, the gradient descent update on the weights is given by
 
@@ -134,7 +137,7 @@ W^{(k)} \leftarrow W^{(k)} - \alpha \Delta C(W^{(k)}) , \quad k = 1, ..., K,
 $$
 where $\alpha$ is the learning rate. Gradient descent requires (nonzero, typically random) starting values for all the weights $W$. 
 
-### Backpropagation to find the gradient of the cost function
+## Backpropagation to find the gradient of the cost function
 
 Since $f(x | W)$ is defined hierarchically, the elements of $W$ occur in layers, starting from the input layer. Computing the gradient is also done most naturally in layers. The backpropagation algorithm implements the chain rule for differentiation to find the gradient of the objective function.
 
@@ -145,10 +148,8 @@ $$
 $$
 
 
-*ref: Computer age statistical inference, page 356.*
 
-
-### Stochastic gradient descent
+## Stochastic gradient descent
 
 Rather than process all the observations before making a gradient step, it can be more efficient to process smaller *batches* of data at a time, or even a single data point $i$. The gradient computed for a batch approximates the true gradient.
 
@@ -157,7 +158,7 @@ E[\Delta C_i(W)] = \Delta C(W)
 $$
 Using sub samples to compute the gradient is called stochastic gradient descent. Several passes can be made over the training set until the algorithm converges. Data is usually shuffled in between to avoid stucking to poor local minima (hence the term *stochastic*?). An *epoch* of training means that all $n$ training samples have been used in gradient steps.
 
-## Types of networks
+# Types of networks
 
 Convolutional neural networks
 https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/

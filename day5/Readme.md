@@ -2,6 +2,8 @@
 
 ### Part 1: What is a neural network?
 
+*Lecture notes 1.1 - 2.4*
+
 - Motivation: practical example (image classification)
 - Machine learning: find f for which f(X) = y. 
 - Structure of a neural network (layers, nodes, activation functions)
@@ -9,6 +11,8 @@
 - Play with demo
 
 ### Part 2: Training a network
+
+*Lecture notes 2.5 - 3.6*
 
 - Generalisation: train and test data
 - Loss and cost functions (L, C) ([info](https://stats.stackexchange.com/questions/179026/objective-function-cost-function-loss-function-are-they-the-same-thing))
