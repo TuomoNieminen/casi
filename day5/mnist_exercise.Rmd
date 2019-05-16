@@ -73,7 +73,6 @@ Explore the objects with `str()` and/or other suitable R commands. What are thei
 str(X) # images 
 str(y) # labels 
 ```
-
 ```{r}
 dim(X)
 dim(y)
@@ -83,9 +82,15 @@ dim(y)
 Plot a random sample of 16 images in grey scale using the `image()` function. Is there something problematic about the images from a human perspective? How about from a computer/algorithmic perspective?
 
 ```{r}
+
+# graphical parameters for R
 par(mfrow = c(4, 4), mar = c(0,0,0,0), yaxt = "n", xaxt = "n")
 
-for(i in sample(1:nrow(X), 16))
+# sample incides for 16 images
+sampled_image_indices <- sample(1:nrow(X), 16)
+
+# plot the images
+for(i in sampled_image_indices)
   image(X[i, , ], col = grey(seq(1,0, length = 256)))
 ```
 
@@ -95,13 +100,15 @@ for(i in sample(1:nrow(X), 16))
 Reshape both the X and the y arrays by collapsing X into a matrix and by expanding y to a hot-one encoded matrix.
 
 ```{r}
-N <- dim(X)[1]
-NC <- dim(X)[2] * dim(X)[3]
 
+# Reshape and scale the image information X
+
+N <- dim(X)[1] # number of observations
+NC <- dim(X)[2] * dim(X)[3] # number of columns
 X_ <- array_reshape(X, c(N, NC)) # reshape X to (N, 784) matrix
-
 X_ <- X_ / 255 # rescale to 0...1
 
+# reshape the labels y
 y_ <- to_categorical(y) # hot-one encode y
 ```
 
@@ -149,8 +156,8 @@ Define the loss function and the optimizer algorithm.
 
 ```{r}
 model %>% compile(
-  loss = 'categorical_crossentropy',
-  optimizer = optimizer_sgd(),
+  loss = 'categorical_crossentropy', # multinomial likelihood
+  optimizer = optimizer_sgd(), # stochastic gradient descent
   metrics = c('accuracy')
 )
 ```
