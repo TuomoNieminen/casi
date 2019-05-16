@@ -4,3 +4,5 @@
 .Rhistory
 .Rproj.user
 !day5/*.pdf
+*.txt
+.RData
