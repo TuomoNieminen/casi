@@ -2,7 +2,7 @@
 title: "MNIST with R Keras (solutions)"
 subtitle: "Computer age statistical inference, University of Helsinki"
 author: "Tuomo Nieminen"
-date: "May 4, 2018"
+date: "updated on: `r Sys.Date()`"
 output: 
   github_document:
     html_preview: false
@@ -123,7 +123,7 @@ model %>% compile(
 
 Train the model on 20 epochs by inputting data in batches of 480 observations.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 history <- model %>% fit(
   x_train, y_train, 
   epochs = 20, 

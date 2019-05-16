@@ -1,3 +1,5 @@
+See the wiki for exercises and solutions.
+
 # Structure of day 5
 
 ### Part 1: What is a neural network?

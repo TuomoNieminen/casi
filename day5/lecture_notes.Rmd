@@ -1,7 +1,7 @@
 ---
 title: "CASI day 5 lecture notes: Neural networks"
 author: "Tuomo Nieminen"
-date: "May 16, 2018"
+date: "update on: `r Sys.Date()`"
 output: 
   pdf_document:
     number_sections: true
@@ -22,7 +22,9 @@ A simple example is linear regression, where
 
 $$f(x) = w_0 + \sum_{j = 1, .., p} x_jw_j.$$
 
-A neural network is a highly parametrized model which in theory can learn any smooth predictive relationship $f: x \rightarrow y$.
+A neural network is a highly parametrized model which in theory can learn any smooth predictive relationship* $f: x \rightarrow y$.
+
+*See [universal approximation theory](https://en.wikipedia.org/wiki/Universal_approximation_theorem)
 
 # Structure of a neural network
 
@@ -63,23 +65,61 @@ Typical choices for the nonlinear part of the activation functions are
 - Rectified linear unit (ReLU): $g(x) = max(0, x)$
 - Sigmoid: $g(x) =  1 / (1 + e^{-x})$
 
-Without the nonlinearities, the neural network reduces to a generalized linear model.
+Without the nonlinearities, the neural network reduces to a linear model.
 
 
-## Example: A neural network for classification
+## Example 1: Simple linear model as a neural network
+
+Say we have the following model
+
+$$
+y = w_0 + w_1x_1 + w_2x_2.
+$$
+Let us present it as a neural network.  
+
+**Input layer**  
+The input layer has 2 units for inputs $x_1$ and $x_2$.
+
+**Hidden layers**  
+This network has no hidden layers at all
+
+**Output layer**  
+The units in the output layer take as input the outputs of the previous layer, which in this case is the input layer (with two units). Let's call these inputs $x_1$ and $x_2$. The output layer has a single node with the following activation:
+
+$$
+z = w_0 + w_1x_1 + w_2x_2
+$$
+
+$$
+g = I(z)
+$$
+
+$$
+a = g(z),
+$$
+
+which is the simple linear model.
+
+
+
+## Example 2: A neural network for classification
 
 Say we want to predict one of 10 classes, using the data $x$ as input, i.e. we want
 
-$$f(x)= \{0, 1, .., 9 \}$$
+$$
+f(x)= \{0, 1, .., 9 \}
+$$
 
 It is generally more useful to learn the probability function 
 
-$$P(y = j | x), \quad j = 0, 1, .. 9 $$
+$$
+P(y = j | x), \quad j = 0, 1, .. 9
+$$
 
-We will define a neural network which produces probabilities for each of the labels. In this example the output layer of the network has 10 units, one for each of the possible class labels. The final nonlinear transformation $g^{(K)}$ in the **output layer** is the *softmax function*  
+We will define a neural network which produces probabilities for each of the labels. In this example the output layer of the network has 10 units, one for each of the possible class labels. The final nonlinear transformation $g^{(K)}$ in the **output layer** is the *softmax function*
 
 $$
-g^{(K)}(z_m^{(K)}; z^{(K)}) = \frac{exp(z_m^{(K)})}{\sum_{l = 1,..,M} exp(z_l^{(K)})},
+g^{(K)}(z_m^{(K)}; z^{(K)}) = \frac{exp(z_m^{(K)})}{\sum_{l = 1,..,M} exp(z_l^{(K)})}
 $$
 
 which computes a number (probability) between zero and one, and all M of them sum to one. This is a symmetric version of the inverse link function used for multiclass logistic regression: a generalization of the sigmoid. 
@@ -93,9 +133,11 @@ A machine learning algorithm is usually trained by first splitting the data into
 
 ## Loss function
 
-A neural network model is a hierarchical function $f(x; W)$ of the feature vector $x$, and the collection of weights $W$. A loss function is a function defined on a single data point $x_i$, a prediction $\hat{y}_i = f(x_i ; W)$ and target $y_i$, and measures the penalty caused by an error in the prediction. For example the square loss is given by 
+A neural network model is a hierarchical function $f(x; W)$ of the feature vector $x$, and the collection of weights $W$. A loss function is a function defined on a single data point $x_i$, a prediction $\hat{y}_i = f(x_i ; W)$ and target $y_i$, and it measures the penalty caused by an error in the prediction. For example the square loss is given by 
 
-$$L(f(x_i ; W), y_i) = (f(x_i ; W) - y_i)^2 = (\hat{y}_i - y_i)^2.$$ 
+$$
+L(f(x_i ; W), y_i) = (f(x_i ; W) - y_i)^2 = (\hat{y}_i - y_i)^2.
+$$ 
 
 The *categorical cross-entropy* is often used as the loss function for classification problems. It is equivalent to the multinomial log likelihood. For a 10-class model it is given by
 
@@ -122,18 +164,20 @@ where $\lambda$ is a tuning parameter for the penalty function $J(W)$. For examp
 $$
 \frac{1}{n} \sum_{i = 1, .., n} (\hat{y}_i - y_i)^2,
 $$
-also known as Ordinary Least Squares (OLS). A cost function can be derived via maximum likelihood estimation (possibly adding a penalty term). An MLE is an example of an *objective function*, a general expression for the function to optimize (maximize or minimize).
+
+also known as Ordinary Least Squares (OLS). A cost function can be derived via maximum likelihood estimation (MLE), possibly adding a penalty term. An MLE is an example of an *objective function*, a general expression for the function to optimize (maximize or minimize).
 
 ref: [stats.stackexchange.com](https://stats.stackexchange.com/questions/179026/objective-function-cost-function-loss-function-are-they-the-same-thing)
 
 
 ## Gradient Descent
 
-To fit the model, the objective is to minimize the cost function with respect to $W$. There is no analytical solution, so we resort to numerical methods. Given the gradient $\Delta C(W)$ of the cost function, the gradient descent update on the weights is given by
+To fit the model, the objective is to minimize the cost function with respect to the parameters (weights) $W$. There is no analytical solution, so we resort to numerical methods. An algorithm called Gradient Descent can be used to find the W which minimizes the cost function. Given the gradient $\Delta C(W)$ of the cost function, the gradient descent update on the weights is given by
 
 $$
 W^{(k)} \leftarrow W^{(k)} - \alpha \Delta C(W^{(k)}) , \quad k = 1, ..., K,
 $$
+
 where $\alpha$ is the learning rate. Gradient descent requires (nonzero, typically random) starting values for all the weights $W$. 
 
 ## Backpropagation to find the gradient of the cost function
@@ -155,6 +199,7 @@ Rather than process all the observations before making a gradient step, it can b
 $$
 E[\Delta C_i(W)] = \Delta C(W)
 $$
+
 Using sub samples to compute the gradient is called stochastic gradient descent. Several passes can be made over the training set until the algorithm converges. Data is usually shuffled in between to avoid stucking to poor local minima (hence the term *stochastic*?). An *epoch* of training means that all $n$ training samples have been used in gradient steps.
 
 # Types of networks
