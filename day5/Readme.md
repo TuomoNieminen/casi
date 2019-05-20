@@ -18,7 +18,7 @@ See the wiki for exercises and solutions.
 
 - Generalisation: train and test data
 - Loss and cost functions (L, C) ([info](https://stats.stackexchange.com/questions/179026/objective-function-cost-function-loss-function-are-they-the-same-thing))
-- Gradient Descent to optimize L. ([video](https://www.youtube.com/watch?v=IHZwWFHWa-w&t=5m11s))
+- Gradient Descent to optimize C. ([video](https://www.youtube.com/watch?v=IHZwWFHWa-w&t=5m11s))
 - Backpropagation to find the gradient of L
 - Stochastic gradient descent
 - Play with R Keras (mnist exercise)
